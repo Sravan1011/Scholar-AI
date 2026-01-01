@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Sparkles, FileText, Brain } from 'lucide-react';
 
+
 export default function Hero() {
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-32">
@@ -28,7 +29,7 @@ export default function Hero() {
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-16">
                     <button className="px-8 py-4 rounded-full bg-white text-black font-semibold text-lg hover:bg-zinc-200 transition-all flex items-center gap-2 group">
-                        Get Started Free
+                        <Link href="/papers">Explore Work</Link>
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
 
