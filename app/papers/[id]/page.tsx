@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import PaperChat from '@/components/PaperChat';
+import { createClient } from '@/lib/supabase/server';
+import { searchArxiv } from '@/lib/arxiv';
+import { searchGoogleScholar } from '@/lib/serpapi';
 
 export default async function PaperViewPage(props: {
     params: Promise<{ id: string }>;
@@ -11,6 +14,28 @@ export default async function PaperViewPage(props: {
 
     const id = params.id;
     let pdfUrl = searchParams.pdf;
+
+    // Fetch paper metadata for title and history logging
+    // If it's an arXiv ID, we can fetch from arXiv.
+    // If it's a random ID from elsewhere, we might struggle.
+    // For now, let's try to get a title if possible.
+    let title = id;
+
+    // Supabase Logging
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+        // Upsert chat history
+        await supabase
+            .from('chats')
+            .upsert({
+                user_id: user.id,
+                paper_id: id,
+                paper_title: title, // We might want to update this with real title if we fetch it
+                last_opened_at: new Date().toISOString()
+            }, { onConflict: 'user_id, paper_id' });
+    }
 
     // If no PDF URL provided, try to construct it for arXiv
     if (!pdfUrl) {

@@ -28,14 +28,18 @@ export default function Hero() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center mb-16">
-                    <button className="px-8 py-4 rounded-full bg-white text-black font-semibold text-lg hover:bg-zinc-200 transition-all flex items-center gap-2 group">
-                        <Link href="/papers">Explore Work</Link>
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    <Link href="/papers">
+                        <button className="px-8 py-4 rounded-full bg-white text-black font-semibold text-lg hover:bg-zinc-200 transition-all flex items-center gap-2 group">
+                            Get Started
+                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                    </Link>
 
-                    <button className="px-8 py-4 rounded-full glass-card text-white font-medium text-lg hover:bg-white/10 transition-all">
-                        View Demo
-                    </button>
+                    <Link href="/login">
+                        <button className="px-8 py-4 rounded-full glass-card text-white font-medium text-lg hover:bg-white/10 transition-all">
+                            Sign In
+                        </button>
+                    </Link>
                 </div>
 
                 {/* Floating Cards (Decorative) */}
