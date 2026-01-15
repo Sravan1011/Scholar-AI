@@ -9,6 +9,7 @@ interface PaperProps {
     conference?: string;
     abstractSnippet: string;
     tags: string[];
+    pdfUrl?: string;
 }
 
 export default function PaperCard({ paper }: { paper: PaperProps }) {
@@ -54,7 +55,10 @@ export default function PaperCard({ paper }: { paper: PaperProps }) {
 
             <div className="flex items-center justify-between mt-auto">
                 <Link
-                    href={`/papers/${paper.id}`}
+                    href={{
+                        pathname: `/papers/${paper.id}`,
+                        query: { pdf: paper.pdfUrl }
+                    }}
                     className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-blue-400 transition-colors group-hover:pl-1"
                 >
                     Read Paper
