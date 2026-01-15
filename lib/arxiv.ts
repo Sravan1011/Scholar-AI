@@ -25,10 +25,31 @@ const parser = new XMLParser({
     attributeNamePrefix: "@_"
 });
 
-export async function searchArxiv(query: string = "cat:cs.AI", start: number = 0, maxResults: number = 10): Promise<Paper[]> {
+export async function searchArxiv(
+    query: string = "",
+    start: number = 0,
+    maxResults: number = 10,
+    sortBy: string = "submittedDate",
+    sortOrder: string = "descending"
+): Promise<Paper[]> {
+    // Construct a smarter query if no prefixes are present
+    let finalQuery = query;
+    // Check if query looks like a raw search (no prefixes like "ti:", "au:", etc.)
+    // We also avoid messing with queries that might already be complex boolean logic if they have known prefixes
+    if (!query.includes(':') && query.trim().length > 0) {
+        // Clean quotes to avoid syntax errors in our constructed query
+        const cleanQuery = query.replace(/"/g, '').trim();
+        if (cleanQuery) {
+            // Search for exact phrase in Title OR Abstract
+            // Use AND logic for words if users prefer? No, User wanted specific title search.
+            // "Deep Residual Learning" -> ti:"Deep Residual Learning" OR abs:"Deep Residual Learning"
+            finalQuery = `ti:"${cleanQuery}" OR abs:"${cleanQuery}"`;
+        }
+    }
+
     try {
         const response = await fetch(
-            `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(query)}&start=${start}&max_results=${maxResults}&sortBy=submittedDate&sortOrder=descending`,
+            `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(finalQuery)}&start=${start}&max_results=${maxResults}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
             { next: { revalidate: 3600 } } // Cache for 1 hour
         );
 
